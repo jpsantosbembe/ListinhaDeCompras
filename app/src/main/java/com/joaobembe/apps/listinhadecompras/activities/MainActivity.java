@@ -1,8 +1,10 @@
-package com.joaobembe.apps.listinhadecompras;
+package com.joaobembe.apps.listinhadecompras.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.joaobembe.apps.listinhadecompras.R;
 
 public class MainActivity extends AppCompatActivity {
 
