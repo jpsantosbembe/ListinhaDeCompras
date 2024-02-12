@@ -1,14 +1,17 @@
 package com.joaobembe.apps.listinhadecompras.fragments;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.joaobembe.apps.listinhadecompras.R;
+import com.joaobembe.apps.listinhadecompras.adapter.ProdutoRecyclerViewAdapter;
+import com.joaobembe.apps.listinhadecompras.model.Produto;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +28,6 @@ public class CarrinhoFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     public CarrinhoFragment() {
         // Required empty public constructor
     }
@@ -61,6 +63,28 @@ public class CarrinhoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_carrinho, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_carrinho, container, false);
+
+        FloatingActionButton button = rootView.findViewById(R.id.fbAdicionarProduto);
+        RecyclerView recyclerView = rootView.findViewById(R.id.listaProdutosRecyclerView);
+
+        ArrayList<Produto> produtoList = new ArrayList<>();
+        produtoList.add(new Produto("Teste", "78945612300", 25.99, 1,"www,w,,ww,"));
+
+        ProdutoRecyclerViewAdapter produtoRecyclerViewAdapter;
+
+        produtoRecyclerViewAdapter = new ProdutoRecyclerViewAdapter(getContext(), produtoList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+        recyclerView.setAdapter(produtoRecyclerViewAdapter);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                produtoList.add(new Produto("Teste", "78945612300", 25.99, 1,"www,w,,ww,"));
+                produtoRecyclerViewAdapter.notifyItemInserted(produtoRecyclerViewAdapter.getItemCount() -1);
+                recyclerView.smoothScrollToPosition(produtoRecyclerViewAdapter.getItemCount() - 1);
+            }
+        });
+        return rootView;
     }
 }
