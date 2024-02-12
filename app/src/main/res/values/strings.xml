@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Listinha de Compras</string>
+    <string name="bottom_navigation_menu_label_1">Pagina Inicial</string>
+    <string name="bottom_navigation_menu_label_2">Carrinho</string>
+    <string name="bottom_navigation_menu_label_3">Configurações</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pagina_inicial_label_padrao">Nada por aqui ainda...</string>
+    <string name="carrinho_label_padrao">Algo incrivel a caminho</string>
+    <string name="configuracoes_label_padrao">Por aqui tambem</string>
+    <string name="pagina_inicial_fragment_label">Pagina Inicial</string>
+    <string name="carrinho_fragment_label">Carrinho</string>
+    <string name="configuracoes_fragment_label">Configurações</string>
 </resources>
