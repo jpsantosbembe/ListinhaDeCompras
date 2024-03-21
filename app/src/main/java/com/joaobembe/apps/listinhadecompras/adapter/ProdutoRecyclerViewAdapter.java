@@ -34,9 +34,9 @@ public class ProdutoRecyclerViewAdapter extends RecyclerView.Adapter<ProdutoRecy
     public void onBindViewHolder(@NonNull ProdutoRecyclerViewAdapter.MyViewHolder holder, int position) {
         holder.tvNomeProduto.setText(produtoArrayList.get(position).getNome());
         holder.tvCodProduto.setText(produtoArrayList.get(position).getGtin());
-        holder.tvPrecoProduto.setText(String.valueOf(produtoArrayList.get(position).getPreco()));
+        holder.tvPrecoProduto.setText("R$" + String.valueOf(produtoArrayList.get(position).getPreco()));
         holder.tvQuantidadeProduto.setText(String.valueOf(produtoArrayList.get(position).getQuantidade()));
-        holder.tvPrecoTotalProduto.setText(String.valueOf(produtoArrayList.get(position).getPrecoTotal()));
+        holder.tvPrecoTotalProduto.setText("R$" + String.valueOf(produtoArrayList.get(position).getPrecoTotal()));
 
     }
 
@@ -54,9 +54,9 @@ public class ProdutoRecyclerViewAdapter extends RecyclerView.Adapter<ProdutoRecy
             super(itemView);
             tvNomeProduto = itemView.findViewById(R.id.tvNomeProduto);
             tvCodProduto = itemView.findViewById(R.id.tvCodProduto);
-            tvPrecoProduto = itemView.findViewById(R.id.tvPreco);
+            tvPrecoProduto = itemView.findViewById(R.id.tvPrecoUnitario);
             tvQuantidadeProduto = itemView.findViewById(R.id.tvQuatidade);
-            tvPrecoTotalProduto = itemView.findViewById(R.id.tvPrecoTotal);
+            tvPrecoTotalProduto = itemView.findViewById(R.id.tvPreco);
             ivProduto = itemView.findViewById(R.id.ivProduto);
         }
     }
