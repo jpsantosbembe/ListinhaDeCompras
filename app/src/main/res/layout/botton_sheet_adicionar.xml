@@ -39,9 +39,8 @@
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:id="@+id/layoutVideo"
+        android:id="@+id/llManual"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,7 +62,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layoutShorts"
+        android:id="@+id/llScan"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

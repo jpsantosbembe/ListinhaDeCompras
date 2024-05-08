@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.joaobembe.apps.listinhadecompras.R;
+import com.joaobembe.apps.listinhadecompras.RecyclerViewClickInterface;
 import com.joaobembe.apps.listinhadecompras.model.Produto;
 
 import java.util.ArrayList;
@@ -18,9 +19,11 @@ import java.util.ArrayList;
 public class ProdutoRecyclerViewAdapter extends RecyclerView.Adapter<ProdutoRecyclerViewAdapter.MyViewHolder> {
     Context context;
     ArrayList<Produto> produtoArrayList;
-    public ProdutoRecyclerViewAdapter(Context context, ArrayList<Produto> produtoArrayList){
+    RecyclerViewClickInterface recyclerViewClickInterface;
+    public ProdutoRecyclerViewAdapter(Context context, ArrayList<Produto> produtoArrayList, RecyclerViewClickInterface recyclerViewClickInterface){
         this.context = context;
         this.produtoArrayList = produtoArrayList;
+        this.recyclerViewClickInterface = recyclerViewClickInterface;
     }
     @NonNull
     @Override
@@ -39,17 +42,14 @@ public class ProdutoRecyclerViewAdapter extends RecyclerView.Adapter<ProdutoRecy
         holder.tvPrecoTotalProduto.setText("R$" + String.valueOf(produtoArrayList.get(position).getPrecoTotal()));
 
     }
-
     @Override
     public int getItemCount() {
         return produtoArrayList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
-
+    class MyViewHolder extends RecyclerView.ViewHolder{
         TextView tvNomeProduto, tvCodProduto, tvPrecoProduto, tvQuantidadeProduto, tvPrecoTotalProduto;
         ImageView ivProduto;
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNomeProduto = itemView.findViewById(R.id.tvNomeProduto);
@@ -58,6 +58,20 @@ public class ProdutoRecyclerViewAdapter extends RecyclerView.Adapter<ProdutoRecy
             tvQuantidadeProduto = itemView.findViewById(R.id.tvQuatidade);
             tvPrecoTotalProduto = itemView.findViewById(R.id.tvPreco);
             ivProduto = itemView.findViewById(R.id.ivProduto);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    recyclerViewClickInterface.onItemClick(getAdapterPosition());
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    recyclerViewClickInterface.onLongItemClick(getAdapterPosition());
+                    return true;
+                }
+            });
         }
     }
 }

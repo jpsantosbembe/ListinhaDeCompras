@@ -26,19 +26,19 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         navigationBarView = findViewById(R.id.bottomNavigationView);
         navigationBarView.setOnItemSelectedListener(this);
-        navigationBarView.setSelectedItemId(R.id.item_1);
+        navigationBarView.setSelectedItemId(R.id.item_2);
 
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.item_1) {
+        /*if (item.getItemId() == R.id.item_1) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frameLayout, paginalInicialFragment)
                     .commit();
             return true;
-        }
+        }*/
         if (item.getItemId() == R.id.item_2) {
             getSupportFragmentManager()
                     .beginTransaction()
