@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
     FloatingActionButton buttonFechar;
     TextView tvTotalLabel;
     TextView tvPrecoTotal;
+
 
     Database database;
 
@@ -89,6 +91,7 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_carrinho, container, false);
 
+
         tvTotalLabel = rootView.findViewById(R.id.tvTotalLabel);
         tvPrecoTotal = rootView.findViewById(R.id.tvPrecoTotal);
         materialDivider = rootView.findViewById(R.id.mdPreco);
@@ -103,7 +106,7 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
             public void onItemClick(int position) {
                 database.removeProduto(carrinho.getProdutos().get(position).getId());
                 carrinho.removerProduto(carrinho.getProdutos().get(position));
-                produtoRecyclerViewAdapter.notifyItemRemoved(position -1);
+                produtoRecyclerViewAdapter.notifyItemRemoved(position);
                 tvPrecoTotal.setText(String.valueOf(carrinho.calcularValorTotal()));
             }
         });
@@ -158,6 +161,27 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
                         dialogManual.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         dialogManual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         dialogManual.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
+                        EditText qtde = dialogManual.findViewById(R.id.etQtde);
+                        ImageButton ibMenos = dialogManual.findViewById(R.id.ibMenos);
+                        ImageButton ibMais = dialogManual.findViewById(R.id.ibMais);
+
+                        ibMenos.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (Integer.parseInt(qtde.getText().toString()) > 1 ) {
+                                    qtde.setText(String.valueOf(Integer.parseInt(qtde.getText().toString()) - 1));
+                                }
+                            }
+                        });
+
+                        ibMais.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                qtde.setText(String.valueOf(Integer.parseInt(qtde.getText().toString()) + 1));
+                            }
+                        });
+
                         Button buttonAdicionar = dialogManual.findViewById(R.id.buttonManual);
                         buttonAdicionar.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -166,6 +190,7 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
                                 EditText etCodigoProduto = dialogManual.findViewById(R.id.etCodigoProduto);
                                 EditText etPrecoProduto = dialogManual.findViewById(R.id.etPrecoProduto);
                                 EditText etQtde = dialogManual.findViewById(R.id.etQtde);
+
 
                                 int ultimoCarrinhoAtivo = 1;
                                 Date date = new Date();

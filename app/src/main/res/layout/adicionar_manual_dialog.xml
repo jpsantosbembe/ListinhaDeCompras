@@ -19,6 +19,7 @@
             android:id="@+id/createText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="Adicionar Produto"
             android:textAlignment="center"
@@ -39,12 +40,17 @@
         android:id="@+id/textView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:text="Produto" />
 
     <EditText
         android:id="@+id/etNomeProduto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:ems="10"
         android:inputType="text" />
 
@@ -52,12 +58,17 @@
         android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:text="Codigo" />
 
     <EditText
         android:id="@+id/etCodigoProduto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:ems="10"
         android:inputType="number" />
 
@@ -70,6 +81,9 @@
             android:id="@+id/Preço"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:text="Preço" />
 
@@ -77,6 +91,9 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="3"
             android:text="Qtde" />
     </LinearLayout>
@@ -90,6 +107,8 @@
             android:id="@+id/etPrecoProduto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0"
             android:ems="10"
             android:inputType="number|numberDecimal" />
@@ -97,11 +116,10 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/ibMenos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/baseline_remove_24" />
@@ -117,7 +135,7 @@
                 android:textAlignment="center" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/ibMais"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/add" />
@@ -129,6 +147,7 @@
         android:id="@+id/buttonManual"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:text="Adicionar " />
 
 </LinearLayout>

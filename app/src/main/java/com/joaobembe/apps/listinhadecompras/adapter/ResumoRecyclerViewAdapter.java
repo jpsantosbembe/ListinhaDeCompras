@@ -38,7 +38,7 @@ public class ResumoRecyclerViewAdapter extends RecyclerView.Adapter<ResumoRecycl
         holder.tvCodProduto.setText(produtoArrayList.get(position).getGtin());
         holder.tvNomeProduto.setText(produtoArrayList.get(position).getNome());
         holder.tvQuantidade.setText(String.valueOf(produtoArrayList.get(position).getQuantidade()));
-        holder.tvPreco.setText("R$" + String.valueOf(produtoArrayList.get(position).getPreco()));
+        holder.tvPreco.setText("R$" + String.valueOf(produtoArrayList.get(position).getPreco() * produtoArrayList.get(position).getQuantidade()));
     }
 
     @Override
