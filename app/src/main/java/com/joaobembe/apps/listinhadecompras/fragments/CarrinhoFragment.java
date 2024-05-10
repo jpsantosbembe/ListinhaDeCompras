@@ -266,6 +266,28 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
             EditText etCodigoProduto = dialogManual.findViewById(R.id.etCodigoProduto);
             etCodigoProduto.setText(result.getContents().toString());
             dialogManual.show();
+
+            EditText qtde = dialogManual.findViewById(R.id.etQtde);
+            ImageButton ibMenos = dialogManual.findViewById(R.id.ibMenos);
+            ImageButton ibMais = dialogManual.findViewById(R.id.ibMais);
+
+            ibMenos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (Integer.parseInt(qtde.getText().toString()) > 1 ) {
+                        qtde.setText(String.valueOf(Integer.parseInt(qtde.getText().toString()) - 1));
+                    }
+                }
+            });
+
+            ibMais.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    qtde.setText(String.valueOf(Integer.parseInt(qtde.getText().toString()) + 1));
+                }
+            });
+
+
             Button buttonAdicionar = dialogManual.findViewById(R.id.buttonManual);
             buttonAdicionar.setOnClickListener(new View.OnClickListener() {
                 @Override
