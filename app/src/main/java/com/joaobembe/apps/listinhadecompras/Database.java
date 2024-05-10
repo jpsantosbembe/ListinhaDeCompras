@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.joaobembe.apps.listinhadecompras.model.Carrinho;
+import com.joaobembe.apps.listinhadecompras.model.Produto;
+
 public class Database extends SQLiteOpenHelper {
     public static final String DB_NAME = "my_database";
     public static final int DB_VERSION = 1;
@@ -29,7 +32,7 @@ public class Database extends SQLiteOpenHelper {
         //sqLiteDatabase.execSQL("drop table if exists PRODUTO_CARRINHO");
     }
 
-    public void insertData(String nome, String gtin, double preco, int quantidade, double precoTotal, String fotoURL, int carrinhoID, int status, String dataCarrinho){
+    public long insertData(String nome, String gtin, double preco, int quantidade, double precoTotal, String fotoURL, int carrinhoID, int status, String dataCarrinho){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("NOME", nome);
@@ -41,12 +44,25 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put("ID_CARRINHO", carrinhoID);
         contentValues.put("STATUS_CARRINHO", status);
         contentValues.put("DATA_CARRINHO", dataCarrinho);
-        db.insert("PRODUTO", null, contentValues);
+        return db.insert("PRODUTO", null, contentValues);
     }
 
     public Cursor getAllData(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from PRODUTO", null);
+        return cursor;
+    }
+
+    public Cursor getCarrinhosFinalizados() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT DISTINCT ID_CARRINHO FROM PRODUTO ORDER BY ID_CARRINHO DESC;", null);
+        return cursor;
+    }
+
+
+    public Cursor getComprasPorCarrinho(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from produto where ID_CARRINHO=" + String.valueOf(id) + ";", null);
         return cursor;
     }
 
@@ -60,5 +76,19 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT MAX(ID_CARRINHO) AS ID_CARRINHO FROM PRODUTO WHERE STATUS_CARRINHO=0;", null);
         return cursor;
+    }
+
+    public void removeProduto(long id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete("PRODUTO", "ID=?", new String[]{String.valueOf(id)});
+    }
+
+    public void fecharCarrinho(Carrinho carrinho){
+        SQLiteDatabase db = this.getReadableDatabase();
+        for (Produto produto: carrinho.getProdutos()) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("STATUS_CARRINHO", "0");
+            db.update("PRODUTO", contentValues,"ID=?", new String[]{String.valueOf(produto.getId())});
+        }
     }
 }

@@ -1,8 +1,7 @@
 package com.joaobembe.apps.listinhadecompras.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,27 +29,27 @@ import com.joaobembe.apps.listinhadecompras.Database;
 import com.joaobembe.apps.listinhadecompras.R;
 import com.joaobembe.apps.listinhadecompras.RecyclerViewClickInterface;
 import com.joaobembe.apps.listinhadecompras.activities.MainActivity;
+import com.joaobembe.apps.listinhadecompras.activities.ResumoCompraActivity;
 import com.joaobembe.apps.listinhadecompras.activities.ScanActivity;
+import com.joaobembe.apps.listinhadecompras.activities.StartActivity;
 import com.joaobembe.apps.listinhadecompras.adapter.ProdutoRecyclerViewAdapter;
 import com.joaobembe.apps.listinhadecompras.model.Carrinho;
 import com.joaobembe.apps.listinhadecompras.model.Produto;
-import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class CarrinhoFragment extends Fragment implements RecyclerViewClickInterface {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    LinearLayout linearLayout;
     MaterialDivider materialDivider;
     Carrinho carrinho = new Carrinho();
     ProdutoRecyclerViewAdapter produtoRecyclerViewAdapter;
     RecyclerView recyclerView;
     FloatingActionButton button;
+    FloatingActionButton buttonFechar;
     TextView tvTotalLabel;
     TextView tvPrecoTotal;
 
@@ -94,17 +92,34 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
         tvTotalLabel = rootView.findViewById(R.id.tvTotalLabel);
         tvPrecoTotal = rootView.findViewById(R.id.tvPrecoTotal);
         materialDivider = rootView.findViewById(R.id.mdPreco);
-        button = rootView.findViewById(R.id.fbAdicionarProduto);
+        button = rootView.findViewById(R.id.fbAdicionar);
+        buttonFechar = rootView.findViewById(R.id.fbFecharCarrinho);
         recyclerView = rootView.findViewById(R.id.listaProdutosRecyclerView);
-        linearLayout = rootView.findViewById(R.id.llCarrinhoVazio);
-
-        //carrinho.adicionarProduto(new Produto("Teste", "78945612300", 25.99, 1,"www,w,,ww,"));
-
         produtoRecyclerViewAdapter = new ProdutoRecyclerViewAdapter(getContext(), carrinho.getProdutos(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.setAdapter(produtoRecyclerViewAdapter);
+        produtoRecyclerViewAdapter.setOnItemClickListener(new ProdutoRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                database.removeProduto(carrinho.getProdutos().get(position).getId());
+                carrinho.removerProduto(carrinho.getProdutos().get(position));
+                produtoRecyclerViewAdapter.notifyItemRemoved(position -1);
+                tvPrecoTotal.setText(String.valueOf(carrinho.calcularValorTotal()));
+            }
+        });
 
         database = new Database(rootView.getContext());
+
+        buttonFechar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                database.fecharCarrinho(carrinho);
+                Intent intent = new Intent(getContext(), ResumoCompraActivity.class);
+                intent.putExtra("carrinho", carrinho.getProdutos().get(0).getCarrinho());
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,44 +165,48 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
                                 EditText etNomeProduto = dialogManual.findViewById(R.id.etNomeProduto);
                                 EditText etCodigoProduto = dialogManual.findViewById(R.id.etCodigoProduto);
                                 EditText etPrecoProduto = dialogManual.findViewById(R.id.etPrecoProduto);
+                                EditText etQtde = dialogManual.findViewById(R.id.etQtde);
+
                                 int ultimoCarrinhoAtivo = 1;
                                 Date date = new Date();
 
-                                System.out.println("--------------------------------------------------------------");
-                                System.out.println("--------------------------------------------------------------");
-                                System.out.println("--------------------------------------------------------------");
-
-                                Cursor cursor = database.getUltimoCarrinhoAtivo();
+                                Cursor cursor = database.getUltimoCarrinhoFinalizado();
                                 if (cursor.moveToNext()) {
-                                    ultimoCarrinhoAtivo = cursor.getInt(0);
+                                    if (cursor.getInt(0) == 0) {
+                                        ultimoCarrinhoAtivo = 1;
+                                    } else {
+                                        ultimoCarrinhoAtivo = cursor.getInt(0) + 1;
+                                    }
                                 }
 
-                                database.insertData(etNomeProduto.getText().toString(),
+                                long produtoId = database.insertData(etNomeProduto.getText().toString(),
                                         etCodigoProduto.getText().toString(),
                                         Double.parseDouble(etPrecoProduto.getText().toString()),
-                                        1,
-                                        Double.parseDouble(etPrecoProduto.getText().toString()) * 1,
+                                        Integer.parseInt(etQtde.getText().toString()),
+                                        Double.parseDouble(etPrecoProduto.getText().toString()) * Integer.parseInt(etQtde.getText().toString()),
                                         null,
                                         ultimoCarrinhoAtivo,
                                         1,
-                                        date.toString()
-                                        );
+                                        date.toString());
 
                                 carrinho.adicionarProduto(new Produto(
+                                        produtoId,
                                         etNomeProduto.getText().toString(),
                                         etCodigoProduto.getText().toString(),
                                         Double.parseDouble(etPrecoProduto.getText().toString()),
-                                        1,
-                                        "www,w,,ww,"));
+                                        Integer.parseInt(etQtde.getText().toString()),
+                                        null,
+                                        false,
+                                        ultimoCarrinhoAtivo));
 
                                 produtoRecyclerViewAdapter.notifyItemInserted(produtoRecyclerViewAdapter.getItemCount() -1);
                                 //recyclerView.smoothScrollToPosition(produtoRecyclerViewAdapter.getItemCount() - 1);
                                 tvPrecoTotal.setText(String.valueOf(carrinho.calcularValorTotal()));
                                 dialogManual.dismiss();
-                                linearLayout.setVisibility(View.GONE);
                                 tvTotalLabel.setVisibility(View.VISIBLE);
                                 tvPrecoTotal.setVisibility(View.VISIBLE);
                                 materialDivider.setVisibility(View.VISIBLE);
+                                buttonFechar.setVisibility(View.VISIBLE);
                             }
                         });
 
@@ -221,7 +240,6 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
             dialogManual.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
             EditText etCodigoProduto = dialogManual.findViewById(R.id.etCodigoProduto);
             etCodigoProduto.setText(result.getContents().toString());
-            System.out.println("TETSTETETETTETETETTETETET");
             dialogManual.show();
             Button buttonAdicionar = dialogManual.findViewById(R.id.buttonManual);
             buttonAdicionar.setOnClickListener(new View.OnClickListener() {
@@ -229,34 +247,49 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
                 public void onClick(View view) {
                     EditText etNomeProduto = dialogManual.findViewById(R.id.etNomeProduto);
                     EditText etPrecoProduto = dialogManual.findViewById(R.id.etPrecoProduto);
+                    EditText etQtde = dialogManual.findViewById(R.id.etQtde);
 
+                    int ultimoCarrinhoAtivo = 1;
                     Date date = new Date();
 
-                    database.insertData(etNomeProduto.getText().toString(),
+                    Cursor cursor = database.getUltimoCarrinhoFinalizado();
+                    if (cursor.moveToNext()) {
+                        if (cursor.getInt(0) == 0) {
+                            ultimoCarrinhoAtivo = 1;
+                        } else {
+                            ultimoCarrinhoAtivo = cursor.getInt(0) + 1;
+                        }
+                    }
+
+                    long produtoId = database.insertData(etNomeProduto.getText().toString(),
                             etCodigoProduto.getText().toString(),
                             Double.parseDouble(etPrecoProduto.getText().toString()),
                             1,
                             Double.parseDouble(etPrecoProduto.getText().toString()) * 1,
                             null,
-                            1,
+                            ultimoCarrinhoAtivo,
                             1,
                             date.toString()
                     );
 
                     carrinho.adicionarProduto(new Produto(
+                            produtoId,
                             etNomeProduto.getText().toString(),
                             etCodigoProduto.getText().toString(),
                             Double.parseDouble(etPrecoProduto.getText().toString()),
-                            1,
-                            "www,w,,ww,"));
+                            Integer.parseInt(etQtde.getText().toString()),
+                            null,
+                            false,
+                            ultimoCarrinhoAtivo));
+
                     produtoRecyclerViewAdapter.notifyItemInserted(produtoRecyclerViewAdapter.getItemCount() -1);
                     //recyclerView.smoothScrollToPosition(produtoRecyclerViewAdapter.getItemCount() - 1);
                     tvPrecoTotal.setText(String.valueOf(carrinho.calcularValorTotal()));
                     dialogManual.dismiss();
-                    linearLayout.setVisibility(View.GONE);
                     tvTotalLabel.setVisibility(View.VISIBLE);
                     tvPrecoTotal.setVisibility(View.VISIBLE);
                     materialDivider.setVisibility(View.VISIBLE);
+                    buttonFechar.setVisibility(View.VISIBLE);
                 }
             });
             //produtoRecyclerViewAdapter.notifyItemInserted(produtoRecyclerViewAdapter.getItemCount() -1);
@@ -269,8 +302,6 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
     public void onItemClick(int position) {
         System.out.println("TESTEEEEEEEEEEEEEE" +
                 "EEE\noioiiiiiiiiiiiiiiiiiiiiiiiii\nqeqeravahbahjbahjab");
-
-
 
     }
 

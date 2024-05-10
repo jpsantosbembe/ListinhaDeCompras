@@ -3,20 +3,50 @@ package com.joaobembe.apps.listinhadecompras.model;
 import android.os.Parcelable;
 
 public class Produto{
+    long id;
     String nome;
     String gtin;
     double preco;
     int quantidade;
     double precoTotal;
     String fotoURL;
+    boolean isVisible;
+    int carrinho;
 
-    public Produto(String nome, String gtin, double preco, int quantidade, String fotoURL) {
+    public Produto(long id, String nome, String gtin, double preco, int quantidade, String fotoURL, boolean isVisible, int carrinho) {
+        this.id = id;
         this.nome = nome;
         this.gtin = gtin;
         this.preco = preco;
         this.quantidade = quantidade;
         this.precoTotal = preco * quantidade;
         this.fotoURL = fotoURL;
+        this.isVisible = isVisible;
+        this.carrinho = carrinho;
+    }
+
+    public int getCarrinho() {
+        return carrinho;
+    }
+
+    public void setCarrinho(int carrinho) {
+        this.carrinho = carrinho;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 
     public String getNome() {
