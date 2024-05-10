@@ -45,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="10dp"
-                        android:text="05/12/1997"
+                        android:text="10/05/2024"
                         android:textSize="16sp" />
 
                     <TextView

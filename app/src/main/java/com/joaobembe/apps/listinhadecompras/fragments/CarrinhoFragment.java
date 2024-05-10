@@ -263,8 +263,22 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
             dialogManual.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             dialogManual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialogManual.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
             EditText etCodigoProduto = dialogManual.findViewById(R.id.etCodigoProduto);
             etCodigoProduto.setText(result.getContents().toString());
+
+            EditText etNomeProduto = dialogManual.findViewById(R.id.etNomeProduto);
+
+            if (result.getContents().toString().equals("7896685300190")) {
+                etNomeProduto.setText("Açucar Cristal 1Kg");
+            } else if (result.getContents().toString().equals("887961935691")) {
+                etNomeProduto.setText("Feijão Preto 1Kg");
+            } else if (result.getContents().toString().equals("7898233608215")) {
+                etNomeProduto.setText("Creme Dental Colgate");
+            } else if (result.getContents().toString().equals("7891055803004")) {
+                etNomeProduto.setText("Sabonete Dove");
+            }
+
             dialogManual.show();
 
             EditText qtde = dialogManual.findViewById(R.id.etQtde);
@@ -298,6 +312,8 @@ public class CarrinhoFragment extends Fragment implements RecyclerViewClickInter
 
                     int ultimoCarrinhoAtivo = 1;
                     Date date = new Date();
+
+                    System.out.println(date.toString());
 
                     Cursor cursor = database.getUltimoCarrinhoFinalizado();
                     if (cursor.moveToNext()) {

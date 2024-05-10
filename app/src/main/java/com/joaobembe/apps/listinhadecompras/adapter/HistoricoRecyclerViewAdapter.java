@@ -53,7 +53,6 @@ public class HistoricoRecyclerViewAdapter extends RecyclerView.Adapter<Historico
             SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-
             try {
                 Date date = dateFormat.parse(dateString);
                 String formattedDate = outputFormat.format(date);
